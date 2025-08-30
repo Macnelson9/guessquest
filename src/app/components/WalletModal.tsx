@@ -1,6 +1,6 @@
 "use client";
 
-import { useConnect, useAccount, useDisconnect } from "wagmi";
+import { useConnect, useAccount, useDisconnect, Connector } from "wagmi";
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
-  const handleConnect = (connector: any) => {
+  const handleConnect = (connector: Connector) => {
     connect({ connector });
     onClose();
   };

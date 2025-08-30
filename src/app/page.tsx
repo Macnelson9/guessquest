@@ -8,7 +8,6 @@ import WalletModal from "./components/WalletModal";
 export default function GuessMyNumber() {
   const [secretNumber, setSecretNumber] = useState<number>(0);
   const [score, setScore] = useState<number>(20);
-  const [highscore, setHighscore] = useState<number>(0);
   const [message, setMessage] = useState<string>("😎 Start guessing...");
   const [guess, setGuess] = useState<string>("");
   const [gameWon, setGameWon] = useState<boolean>(false);
@@ -19,14 +18,16 @@ export default function GuessMyNumber() {
   const { address, isConnected } = useAccount();
 
   // Contract hooks
-  const { data: contractHighscore } = useReadContract({
-    address: CONTRACT_ADDRESS as `0x${string}`,
-    abi: CONTRACT_ABI,
-    functionName: "getMyHighscore",
-    query: {
-      enabled: isConnected,
-    },
-  });
+  const { data: contractHighscore, refetch: refetchHighscore } =
+    useReadContract({
+      address: CONTRACT_ADDRESS as `0x${string}`,
+      abi: CONTRACT_ABI,
+      functionName: "getMyHighscore",
+      account: address,
+      query: {
+        enabled: !!address,
+      },
+    });
 
   const { data: totalPlayers } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
@@ -52,19 +53,14 @@ export default function GuessMyNumber() {
     setSecretNumber(Math.trunc(Math.random() * 20) + 1);
   }, []);
 
-  // Handle wallet connection and highscore loading
+  // Handle wallet connection
   useEffect(() => {
     if (isConnected && address) {
       setIsWalletModalOpen(false);
-
-      // Load highscore from contract if user is registered
-      if (contractHighscore !== undefined) {
-        setHighscore(Number(contractHighscore));
-      }
     } else {
       setIsWalletModalOpen(true);
     }
-  }, [isConnected, address, contractHighscore]);
+  }, [isConnected, address]);
 
   // Register new player if not registered
   useEffect(() => {
@@ -100,18 +96,25 @@ export default function GuessMyNumber() {
       setNumberDisplay(secretNumber.toString());
       setGameWon(true);
 
-      if (score > highscore) {
-        setHighscore(score);
-
+      const currentHighscore = Number(contractHighscore || 0);
+      if (score > currentHighscore) {
         // Update highscore on contract
         if (isConnected && address) {
           try {
-            updateHighscoreContract({
-              address: CONTRACT_ADDRESS as `0x${string}`,
-              abi: CONTRACT_ABI,
-              functionName: "updateHighscore",
-              args: [BigInt(score)],
-            });
+            updateHighscoreContract(
+              {
+                address: CONTRACT_ADDRESS as `0x${string}`,
+                abi: CONTRACT_ABI,
+                functionName: "updateHighscore",
+                args: [BigInt(score)],
+              },
+              {
+                onSuccess: () => {
+                  // Refetch highscore after update
+                  refetchHighscore();
+                },
+              }
+            );
           } catch (error) {
             console.error("Error updating highscore:", error);
           }
@@ -270,7 +273,8 @@ export default function GuessMyNumber() {
             💯 Score: <span className="font-bold">{score}</span>
           </p>
           <p>
-            🥇 Highscore: <span className="font-bold">{highscore}</span>
+            🥇 Highscore:{" "}
+            <span className="font-bold">{Number(contractHighscore || 0)}</span>
           </p>
         </section>
       </main>
