@@ -14,14 +14,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "GuessQuest",
-  description:
-    "A blockchain-powered number guessing game built with Next.js, TypeScript, and Solidity",
-  icons: {
-    icon: "/image.png",
-  },
-};
+// export const metadata: Metadata = {
+//   title: "GuessQuest",
+//   description:
+//     "A blockchain-powered number guessing game built with Next.js, TypeScript, and Solidity",
+//   icons: {
+//     icon: "/image.png",
+//   },
+// };
 
 export async function generateMetadata(): Promise<Metadata> {
   // Read envs (may be undefined in some environments)
@@ -62,8 +62,8 @@ export async function generateMetadata(): Promise<Metadata> {
     );
 
     return {
-      title: PROJECT_NAME || metadata.title,
-      description: APP_DESC || metadata.description,
+      title: PROJECT_NAME,
+      description: APP_DESC,
     };
   }
 
@@ -85,7 +85,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: PROJECT_NAME,
-    description: APP_DESC || metadata.description,
+    description: APP_DESC,
     other: {
       "fc:frame": JSON.stringify(frame),
     },
