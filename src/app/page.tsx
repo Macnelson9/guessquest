@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "./web3-config";
 import WalletModal from "./components/WalletModal";
 
 export default function GuessMyNumber() {
+  const { setFrameReady, isFrameReady } = useMiniKit();
   const [secretNumber, setSecretNumber] = useState<number>(0);
   const [score, setScore] = useState<number>(20);
   const [message, setMessage] = useState<string>("😎 Start guessing...");
@@ -50,8 +52,9 @@ export default function GuessMyNumber() {
 
   // Initialize game
   useEffect(() => {
+    if (!isFrameReady) setFrameReady();
     setSecretNumber(Math.trunc(Math.random() * 20) + 1);
-  }, []);
+  }, [isFrameReady, setFrameReady]);
 
   // Handle wallet connection
   useEffect(() => {

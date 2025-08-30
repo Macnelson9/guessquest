@@ -10,6 +10,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@coinbase/onchainkit": "^0.38.19",
     "@wagmi/connectors": "^5.9.8",
     "@wagmi/core": "^2.20.2",
     "ethers": "^6.15.0",
