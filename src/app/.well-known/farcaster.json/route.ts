@@ -3,20 +3,18 @@ export async function GET() {
     frame: {
       name: "GuessQuest",
       version: "1",
-      iconUrl: "https://guessquest-seven.vercel.app/icon.png",
+      iconUrl: "https://guessquest-seven.vercel.app/image.png",
       homeUrl: "https://guessquest-seven.vercel.app",
       imageUrl: "https://guessquest-seven.vercel.app/image.png",
       buttonTitle: "Open GuessQuest",
-      splashImageUrl:
-        "https://guessquest-seven.vercel.app/.well-known/farcaster.json/image.png",
+      splashImageUrl: "https://guessquest-seven.vercel.app/image.png",
       splashBackgroundColor: "#000000",
       webhookUrl: "https://guessquest-seven.vercel.app/api/webhook",
       subtitle: "A fun guessing game",
       description: "Guess the answer to win!",
       primaryCategory: "games",
       tags: ["games", "social", "fun", "casual", "exciting"],
-      heroImageUrl:
-        "https://guessquest-seven.vercel.app/.well-known/farcaster.json/hero.png",
+      heroImageUrl: "https://guessquest-seven.vercel.app/hero.png",
       tagline: "Play instantly, win together",
       ogTitle: "GuessQuest - Fast, fun, social",
       ogDescription: "Fast, fun, social",
